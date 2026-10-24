@@ -25,7 +25,7 @@ namespace MvcMonolithic.Controllers
         public async Task<IActionResult> Create(PostPersonDto personDto)
         {
             await _personApplicationService.Post(personDto);
-            return View(personDto);
+            return RedirectToAction("Index");
         }
         #endregion
 
@@ -41,9 +41,9 @@ namespace MvcMonolithic.Controllers
         #region [-Details-]
 
         #region Detail
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(PersonIdDto personIdDto)
         {
-            var result = await _personApplicationService.GetById(id);
+            var result = await _personApplicationService.GetById(personIdDto.Id);
             return View(result);
         }
         #endregion
@@ -65,15 +65,23 @@ namespace MvcMonolithic.Controllers
         public async Task<IActionResult> Edit(PutPersonDto personDto)
         {
             await _personApplicationService.Put(personDto);
-            return View(personDto);
+            return RedirectToAction("Index");
         }
         #endregion
 
         #region Get
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(PersonIdDto personIdDto)
         {
-            var result = await _personApplicationService.GetById(id);
-            return View(result);
+            var result = await _personApplicationService.GetById(personIdDto.Id);
+
+            var putPersonDto = new PutPersonDto()
+            {
+                Id = result.Id,
+                FirstName = result.FirstName,
+                LastName = result.LastName
+            };
+
+            return View(putPersonDto);
         }
         #endregion
 
@@ -91,10 +99,18 @@ namespace MvcMonolithic.Controllers
         #endregion
 
         #region Get
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(PersonIdDto personIdDto)
         {
-            var result = await _personApplicationService.GetById(id);
-            return View(result);
+            var result = await _personApplicationService.GetById(personIdDto.Id);
+
+            var deletePersonDto = new DeletePersonDto()
+            {
+                Id = result.Id,
+                FirstName = result.FirstName,
+                LastName = result.LastName
+            };
+
+            return View(deletePersonDto);
         }
         #endregion
 
